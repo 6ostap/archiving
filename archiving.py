@@ -6,12 +6,8 @@ from tqdm import tqdm
 
 
 def archive(path: Path):
-    with zipfile.ZipFile(path / "archive.zip", mode="w") as fantasy_zip:
-        for folder, subfolders, files in os.walk(path):
+    with zipfile.ZipFile(path.parent / "archive.zip", mode="w") as fantasy_zip:
 
-            for file in tqdm(files, desc='Archiving'):
-                if not file.endswith('.zip'):
-                    fantasy_zip.write(os.path.join(folder, file),
-                                      os.path.relpath(os.path.join(folder, file), path),
-                                      compress_type=zipfile.ZIP_DEFLATED)
+        for file in tqdm(list(path.iterdir()), desc='Archiving'):
+            fantasy_zip.write(file, file.name, compress_type=zipfile.ZIP_DEFLATED)
 
